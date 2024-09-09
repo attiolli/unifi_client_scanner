@@ -1,5 +1,7 @@
 # unifi_client_scanner
 
+A simple python app to query Unifi controller API endpoint to scan wlan clients and notify by email if new clients join the network. You will need some email account to send & receive emails.
+
 ## First create .env file locally on your working dir for your script secrets
 ```
 CONTROLLER_URL=https://your.unifi.url
