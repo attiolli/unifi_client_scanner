@@ -1,6 +1,7 @@
 # unifi_client_scanner
 
 ## First create .env file locally on your working dir for your script secrets
+```
 CONTROLLER_URL=https://your.unifi.url
 USERNAME=unifiusername
 PASSWORD=unifipassword
@@ -11,6 +12,7 @@ SMTP_PASSWORD=emailpassword
 EMAIL_RECIPIENT=recipient@somedomain.com
 SMTP_SERVER=mail.somedomain.com
 SMTP_PORT=465
+```
 
 ## Then build and run (using .env file) with docker
 
