@@ -21,9 +21,13 @@ SMTP_PORT=465
 docker build -t unifi-client-scanner:latest .
 
 ## Finally run with the local .env file you created at the beginning
-(This example removes the container after running, but consider altering the parameters if you wish to leave the program running on background)
+(This example removes the container after running)
 
 docker run --env-file .env -it --rm unifi-client-scanner:latest
+
+(To start the container in detatched mode use something like this)
+
+docker run --env-file .env -d --restart unless-stopped unifi-client-scanner:latest
 
 ## Example output of the program running
 (The program first lists all of the clients on the network and fires an email of all the clients detected. Then after a short period, the program checks if any new clients have joined the network and if so, the program creates another email alert. In the example below, no new clients have been detected on the second scanning.)
