@@ -2,7 +2,7 @@
 
 A simple python app to query Unifi controller API endpoint to scan wlan clients and notify by email if new clients join the network. You will need some email account to send & receive emails.
 
-## First create .env file locally on your working dir for your script secrets
+## First create .env file locally on your working dir for your script secrets. Content of the .env file as below.
 ```
 CONTROLLER_URL=https://your.unifi.url
 USERNAME=unifiusername
@@ -16,9 +16,12 @@ SMTP_SERVER=mail.somedomain.com
 SMTP_PORT=465
 ```
 
-## Then build and run (using .env file) with docker
+## Then build the image
 
 docker build -t unifi-client-scanner:latest .
+
+## Finally run with the local .env file you created at the beginning
+(This example removes the container after running, but consider altering the parameters if you wish to leave the program running on background)
 
 docker run --env-file .env -it --rm unifi-client-scanner:latest
 
