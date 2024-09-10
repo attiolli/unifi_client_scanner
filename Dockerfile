@@ -13,4 +13,4 @@ COPY known_clients.txt .
 COPY app.py .
 
 # Define the command to run your application
-CMD ["python", "app.py"]
+CMD ["python", "-u", "app.py"]
