@@ -6,7 +6,7 @@ WORKDIR /app
 
 # Copy the requirements file and install dependencies
 COPY requirements.txt .
-RUN pip install python-dotenv --no-cache-dir -r requirements.txt
+RUN pip install flask python-dotenv --no-cache-dir -r requirements.txt
 
 # Copy the Python script into the container
 COPY known_clients.txt .
