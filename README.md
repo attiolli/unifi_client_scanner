@@ -30,7 +30,7 @@ docker build -t unifi-client-scanner:latest .
 ```docker run --env-file .env -e TZ=Europe/Helsinki -d --restart unless-stopped --name unifi-client-scanner unifi-client-scanner:latest```
 
 ## Example output of the program running
-(The program first lists all of the clients on the network and fires an email of all the clients detected. Then after a short period, the program checks if any new clients have joined the network and if so, the program creates another email alert. In the example below, no new clients have been detected on the second scanning.)
+(The program first lists all of the clients on the network and fires an email of all the clients detected. Then after a short period, the program checks if any new clients have joined the network and if so, the program creates another email alert. In the example below, no new clients have been detected on the second scanning. Once a client has been seen on the network, there wont be an alert about the same client again if it reconnects to network.)
 
 ```
 docker run --env-file .env -it --rm unifi-client-scanner:latest   
