@@ -22,9 +22,11 @@ docker build -t unifi-client-scanner:latest .
 
 ## Finally run with the local .env file you created at the beginning
 (This example is for a quick run - it also removes the container after running)
+
 ```docker run --env-file .env -it --rm unifi-client-scanner:latest```
 
 (To start the container in detatched mode use something like this)
+
 ```docker run --env-file .env -e TZ=Europe/Helsinki -d --restart unless-stopped --name unifi-client-scanner unifi-client-scanner:latest```
 
 ## Example output of the program running
