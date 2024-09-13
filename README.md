@@ -1,4 +1,4 @@
-# unifi_client_scanner
+# Unifi Client Scanner
 
 A simple python app to query Unifi controller API endpoint to scan wlan clients and notify by email if new clients join the network. You will need some email account to send & receive emails. The app will also expose port 8080 for monitoring the health of the unifi client scanner thread with GET /health. If the unifi thread is healthy, 200ok is returned and if the unifi thread is declaired dead, a 500 error is returned to the client. This health monitoring is useful if the app is deployed in a k8s environment and you want to use liveness and readiness probes.
 
