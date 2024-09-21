@@ -87,10 +87,23 @@ def get_wifi_clients():
         "Referer": f"{controller_url}/manage/site/{site_id}/dashboard",
         "X-Requested-With": "XMLHttpRequest"
     }
-    response = session.get(clients_url, headers=headers, verify=False)
-    response.raise_for_status()
-    clients = response.json()["data"]
-    return clients
+    
+    try:
+        response = session.get(clients_url, headers=headers, verify=False)
+        response.raise_for_status()  # This will raise an HTTPError for bad responses
+        clients = response.json()["data"]
+        return clients
+    
+    except requests.exceptions.HTTPError as http_err:
+        logging.error(f"HTTP error occurred: {http_err}")
+        
+    except requests.exceptions.RequestException as req_err:
+        logging.error(f"Request error occurred: {req_err}")
+    
+    except Exception as err:
+        logging.error(f"An error occurred: {err}")
+    
+    return None  # Optionally, return None or an empty list if an error occurs
 
 def get_client_details(mac_address):
     """Fetch detailed information for a specific MAC address from the UniFi Controller."""
