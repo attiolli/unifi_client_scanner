@@ -95,13 +95,13 @@ def get_wifi_clients():
         return clients
     
     except requests.exceptions.HTTPError as http_err:
-        logging.error(f"HTTP error occurred: {http_err}")
+        print(f"HTTP error occurred: {http_err}")
         
     except requests.exceptions.RequestException as req_err:
-        logging.error(f"Request error occurred: {req_err}")
+        print(f"Request error occurred: {req_err}")
     
     except Exception as err:
-        logging.error(f"An error occurred: {err}")
+        print(f"An error occurred: {err}")
     
     return None  # Optionally, return None or an empty list if an error occurs
 
@@ -146,7 +146,6 @@ def send_alert(new_clients):
     msg.attach(MIMEText(body, 'plain'))
 
     try:
-        # Use SMTP_SSL to connect to the SMTP server with SSL
         server = smtplib.SMTP_SSL(smtp_server, smtp_port)
         server.login(smtp_username, smtp_password)  # Log in to the SMTP server with username and password
         server.sendmail(email_sender, email_recipient, msg.as_string())
@@ -161,38 +160,36 @@ def log_message(message):
 
 def run_unifi_client_scanner():
     global is_unifi_thread_healthy
-    try:
-        # Load known clients from the file
-        known_clients = load_known_clients(known_clients_file)  
-        login()
-        while True:
+    # Load known clients from the file
+    known_clients = load_known_clients(known_clients_file)  
+    login()
+    while True:
+        try:
             log_message("Checking for new clients...")
-            
             current_clients = get_wifi_clients()
-            current_client_macs = {client['mac']: client for client in current_clients}
 
-            # Find new clients
-            new_clients_macs = set(current_client_macs.keys()) - known_clients
-
-            if new_clients_macs:
-                # Collect the full client info for new clients
-                new_clients = [current_client_macs[mac] for mac in new_clients_macs if mac in current_client_macs]
-                log_message(f"New clients detected: {new_clients_macs}")
-                send_alert(new_clients)
-                # Optionally, update the known clients list
-                known_clients.update(new_clients_macs)
+            if current_clients is None:
+                log_message("Failed to retrieve clients.")
             else:
-                log_message("No new clients found.")
+                current_client_macs = {client['mac']: client for client in current_clients}
+                # Find new clients
+                new_clients_macs = set(current_client_macs.keys()) - known_clients
 
-            # Update the shared state variable to indicate health
-            is_unifi_thread_healthy = True
-            # Wait for a period (e.g., 5 minutes) before checking again
-            time.sleep(300)
-    
-    except Exception as e:
-        # If an error occurs, mark the thread as unhealthy
-        is_unifi_thread_healthy = False
-        print(f"Error occurred: {e}")
+                if new_clients_macs:
+                    new_clients = [current_client_macs[mac] for mac in new_clients_macs if mac in current_client_macs]
+                    log_message(f"New clients detected: {new_clients_macs}")
+                    send_alert(new_clients)
+                    known_clients.update(new_clients_macs)
+                else:
+                    log_message("No new clients found.")
+                is_unifi_thread_healthy = True 
+            
+        except Exception as e:
+            # If an error occurs, mark the thread as unhealthy
+            is_unifi_thread_healthy = False
+            print(f"Error occurred: {e}")
+
+        time.sleep(300)
 
 def main():
     # Start the main app logic in a separate thread
