@@ -50,8 +50,8 @@ def health_check():
         return jsonify(status="unhealthy"), 500
 
 # API Endpoints when accessing Unifi controller
-login_url = f"{controller_url}/api/login"
-clients_url = f"{controller_url}/api/s/{site_id}/stat/sta"
+login_url = f"{controller_url}/api/auth/login"
+clients_url = f"{controller_url}/proxy/network/api/s/{site_id}/stat/sta"
 
 # Create a session to manage cookies
 session = requests.Session()
