@@ -75,10 +75,15 @@ def load_known_clients(file_path):
     return known_macs
 
 def login():
+    """Authenticate and establish a session with the UniFi Controller."""
     payload = {"username": username, "password": password, "remember": True}
-    response = session.post(login_url, json=payload, verify=False)
-    response.raise_for_status()
-    print("Login successful!")
+    try:
+        response = session.post(login_url, json=payload, verify=False)
+        response.raise_for_status()
+        print("Login successful!")
+    except requests.exceptions.RequestException as e:
+        print(f"Login failed: {e}")
+        raise
 
 def get_wifi_clients():
     """Retrieve the list of connected clients from the UniFi Controller."""
@@ -90,9 +95,12 @@ def get_wifi_clients():
     
     try:
         response = session.get(clients_url, headers=headers, verify=False)
-        response.raise_for_status()  # This will raise an HTTPError for bad responses
-        clients = response.json()["data"]
-        return clients
+        if response.status_code == 401:  # Handle session expiration
+            print("Session expired. Re-authenticating...")
+            login()
+            response = session.get(clients_url, headers=headers, verify=False)  # Retry after re-authenticating
+        response.raise_for_status()
+        return response.json().get("data", [])
     
     except requests.exceptions.HTTPError as http_err:
         print(f"HTTP error occurred: {http_err}")
